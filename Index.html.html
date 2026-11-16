@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AquaSense V1 – Die smarte Toilette</title>
+<style>
+:root{--bg:#050a14;--card:rgba(13,27,52,.72);--bd:rgba(56,140,255,.4);--a:#2f8fff;--a2:#4cc3ff;--fg:#eaf2ff;--mu:#9db2cf;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% 0,#0e2650 0,var(--bg) 62%) fixed;color:var(--fg);font-family:-apple-system,"SF Pro Display",Inter,"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+header{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 12px) 20px 12px;background:rgba(5,10,20,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.lg{display:flex;align-items:center;gap:8px;font-weight:700;font-size:19px}
+.lg svg{width:22px}
+#mb{background:none;border:0;padding:8px;cursor:pointer}
+#mb i{display:block;width:26px;height:2.5px;margin:5px 0;background:var(--fg);border-radius:2px;transition:.35s}
+.open #mb i:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.open #mb i:nth-child(2){opacity:0}
+.open #mb i:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;padding:90px 20px 40px;text-align:center}
+h1{font-size:clamp(40px,11vw,76px);margin:0;letter-spacing:-.03em;line-height:1}
+.g{color:var(--a2);text-shadow:0 0 28px rgba(47,143,255,.6)}
+.tg{letter-spacing:.3em;font-size:12px;color:var(--mu);text-transform:uppercase;margin:10px 0 0}
+.toi{width:min(78vw,340px);margin:6px 0;animation:fl 6s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-10px)}}
+.led{animation:gl 2.4s ease-in-out infinite alternate}
+@keyframes gl{from{opacity:.35}to{opacity:1}}
+.bub{animation:bb 4s ease-in infinite}
+@keyframes bb{from{transform:translateY(20px);opacity:0}30%{opacity:.8}to{transform:translateY(-110px);opacity:0}}
+.cta{display:flex;flex-wrap:wrap;justify-content:center;gap:28px 34px;width:100%;margin-top:8px}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:210px}
+.btn{font:inherit;font-weight:600;font-size:18px;border-radius:99px;padding:15px 38px;cursor:pointer;text-decoration:none;transition:.3s;border:1.5px solid var(--a);color:var(--fg);background:transparent}
+.btn.p{background:linear-gradient(135deg,var(--a),var(--a2));border:0;color:#04101f;box-shadow:0 0 34px rgba(47,143,255,.55)}
+.btn:hover{transform:translateY(-3px) scale(1.03)}
+.pr{font-size:42px;font-weight:700;letter-spacing:-.02em}
+.sm{font-size:14px;color:var(--mu);margin:0;line-height:1.5}
+.sm s{color:#ff8a8a}
+.bdg{display:inline-block;background:rgba(47,143,255,.18);border:1px solid var(--bd);color:var(--a2);border-radius:99px;padding:4px 12px;font-weight:600;font-size:14px}
+.ar{animation:bn 1.8s ease-in-out infinite;font-size:22px;color:var(--a2)}
+@keyframes bn{50%{transform:translateY(8px)}}
+.sec{max-width:760px;margin:0 auto;padding:70px 20px 20px}
+h2{font-size:clamp(32px,8vw,56px);margin:0 0 10px;letter-spacing:-.03em;line-height:1.05}
+.fc{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:22px;margin:26px 0;display:grid;gap:6px 20px;grid-template-columns:1fr;box-shadow:0 0 40px rgba(47,143,255,.08)}
+@media(min-width:620px){.fc{grid-template-columns:1fr 190px}.fc .vz{grid-column:2;grid-row:1/5}}
+.fc h3{margin:0;font-size:24px}
+.fc b{color:var(--a2);font-weight:600}
+.fc p{color:var(--mu);margin:6px 0;line-height:1.5}
+.fc ul{list-style:none;padding:0;margin:8px 0 0}
+.fc li{padding:5px 0 5px 30px;position:relative;opacity:0;transform:translateX(-16px);transition:.6s}
+.fc li::before{content:"✓";position:absolute;left:0;top:4px;width:20px;height:20px;border-radius:50%;background:rgba(47,143,255,.2);color:var(--a2);font-size:13px;display:flex;align-items:center;justify-content:center}
+.vz svg{width:100%;max-width:210px;margin:auto;display:block;overflow:visible}
+.rv{opacity:0;transform:translateY(60px) scale(.96);transition:1s cubic-bezier(.2,.8,.2,1)}
+.rv.in,.rv.in li{opacity:1;transform:none}
+.rv.in li{transition-delay:calc(var(--k)*.18s + .5s)}
+.gl{animation:gl 1.8s ease-in-out infinite alternate}
+.up{animation:up 1.6s ease-in infinite}
+@keyframes up{from{transform:translateY(12px);opacity:0}50%{opacity:1}to{transform:translateY(-14px);opacity:0}}
+.d2{animation:d2 1.1s ease-out infinite}
+@keyframes d2{from{transform:translate(0,0);opacity:1}to{transform:translate(-26px,-20px);opacity:0}}
+.lid{transform-origin:90px 40px;animation:ld 3s ease-in-out infinite alternate}
+@keyframes ld{to{transform:rotate(55deg)}}
+.wv{animation:wv 1.6s ease-out infinite}
+@keyframes wv{from{transform:translateX(0);opacity:1}to{transform:translateX(-16px);opacity:0}}
+footer{text-align:center;padding:60px 20px calc(50px + env(safe-area-inset-bottom,0px));color:var(--mu)}
+footer b{display:block;color:var(--fg);font-size:20px;margin-bottom:8px}
+#menu{position:fixed;inset:0;z-index:25;background:rgba(5,10,20,.97);backdrop-filter:blur(18px);padding:calc(env(safe-area-inset-top,0px) + 80px) 20px 30px;overflow-y:auto;opacity:0;pointer-events:none;transform:translateY(-16px);transition:.4s}
+.open #menu{opacity:1;pointer-events:auto;transform:none}
+.mw{max-width:640px;margin:0 auto}
+.tabs{display:flex;gap:10px;margin-bottom:26px}
+.tabs button{flex:1;font:inherit;font-size:15px;font-weight:600;padding:12px 4px;border-radius:14px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;transition:.3s}
+.tabs button.on{background:rgba(47,143,255,.2);color:var(--fg);border-color:var(--a)}
+.pn{display:none}.pn.on{display:block;animation:ri .6s both}
+@keyframes ri{from{opacity:0;transform:translateY(20px)}}
+.dn{width:min(70vw,270px);display:block;margin:0 auto 24px;overflow:visible}
+.dn circle{transition:stroke-dasharray 1.2s cubic-bezier(.3,.7,.2,1)}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(56,140,255,.2)}
+.row i{width:11px;height:11px;border-radius:50%;flex:none}
+.row span{flex:1}
+.row.t{font-weight:700;border:0;font-size:19px}
+.fo{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:26px;display:flex;align-items:center;gap:20px;margin-bottom:18px}
+.av{width:76px;height:76px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;background:linear-gradient(135deg,var(--a),var(--a2));color:#04101f;box-shadow:0 0 30px rgba(47,143,255,.5);animation:pu 3s ease-in-out infinite}
+@keyframes pu{50%{box-shadow:0 0 50px rgba(76,195,255,.8)}}
+.fo h3{margin:0 0 4px;font-size:22px}
+.fo a{color:var(--a2);font-weight:600;font-size:18px;line-height:1.35;text-decoration:underline;text-underline-offset:4px}
+#ts{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:#0d1b34;border:1px solid var(--a);border-radius:16px;padding:14px 20px;max-width:88vw;text-align:center;opacity:0;transition:.4s;z-index:40;font-size:15px}
+#ts.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<header><div class="lg"><svg viewBox="0 0 100 120"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4cc3ff"/><stop offset="1" stop-color="#0a64e8"/></linearGradient></defs><path d="M50 4C50 4 12 48 12 76a38 38 0 0 0 76 0C88 48 50 4 50 4Z" fill="url(#lg)"/><path d="M50 40C40 56 32 66 32 78a18 18 0 0 0 36 0C68 66 60 56 50 40Z" fill="#050a14"/></svg>AquaSense</div><button id="mb" aria-label="Menü"><i></i><i></i><i></i></button></header>
+
+<nav id="menu"><div class="mw">
+<div class="tabs"><button class="on" data-t="inv">Investment</button><button data-t="gru">Gründer</button><button data-t="soc">Socials</button></div>
+<div class="pn on" id="inv"><h2>Verwendung des <span class="g">Kapitals</span></h2>
+<svg class="dn" id="dn" viewBox="0 0 200 200"><text x="100" y="98" text-anchor="middle" fill="#eaf2ff" font-size="24" font-weight="700" font-family="sans-serif">250.000 €</text><text x="100" y="120" text-anchor="middle" fill="#9db2cf" font-size="13" font-family="sans-serif">Gesamt</text></svg>
+<div id="rows"></div></div>
+<div class="pn" id="gru"><h2>Die <span class="g">Gründer</span></h2><p class="sm" style="margin-bottom:22px">Das Team hinter AquaSense.</p>
+<div class="fo"><div class="av">NM</div><div><h3>Nia Mevenkamp</h3><p class="sm">18 Jahre · Entrepreneur</p></div></div>
+<div class="fo"><div class="av">MW</div><div><h3>Mick Wiedemann</h3><p class="sm">18 Jahre · Entrepreneur</p></div></div></div>
+<div class="pn" id="soc"><h2>Unsere <span class="g">Socials</span></h2><p class="sm" style="margin-bottom:22px">Folge uns und verpasse keine Neuigkeiten.</p>
+<div class="fo"><div class="av"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#04101f" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="#04101f"/></svg></div><div><a href="https://www.instagram.com/aquasenseproducts?xtok=MW1mejJnZ2tnM2F0bA%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">Unser Instagram für regelmäßige Updates</a><p class="sm" style="margin-top:6px">@aquasenseproducts</p></div></div></div>
+</div></nav>
+
+<section class="hero">
+<h1>Aqua<span class="g">Sense</span> V1</h1>
+<p class="tg">Die smarte Toilette für dein Zuhause</p>
+<svg class="toi" viewBox="0 0 300 340"><defs><linearGradient id="wh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#c9d8ee"/></linearGradient><radialGradient id="hl"><stop offset="0" stop-color="#2f8fff" stop-opacity=".55"/><stop offset="1" stop-color="#2f8fff" stop-opacity="0"/></radialGradient><filter id="bl"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<circle class="gl" cx="150" cy="170" r="150" fill="url(#hl)"/>
+<ellipse cx="150" cy="320" rx="100" ry="11" fill="#2f8fff" opacity=".45" filter="url(#bl)"/>
+<path d="M104 250H196L206 306Q206 322 150 322Q94 322 94 306Z" fill="url(#wh)"/>
+<rect x="76" y="40" width="148" height="100" rx="34" fill="url(#wh)"/>
+<rect x="66" y="28" width="168" height="30" rx="15" fill="#fff" stroke="#bcd0ec"/>
+<path d="M54 140H246V196Q246 276 150 292Q54 276 54 196Z" fill="url(#wh)"/>
+<ellipse cx="150" cy="140" rx="96" ry="16" fill="#eef4fc" stroke="#bcd0ec"/>
+<path class="led" d="M60 160Q150 176 240 160" stroke="#4cc3ff" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#bl)"/>
+<path d="M60 160Q150 176 240 160" stroke="#4cc3ff" stroke-width="2" fill="none" stroke-linecap="round"/>
+<rect x="118" y="196" width="64" height="34" rx="9" fill="#07101f" stroke="#1d4a8a"/>
+<text x="150" y="219" text-anchor="middle" font-size="15" font-weight="700" fill="#4cc3ff" font-family="sans-serif">37°C</text>
+<g fill="#4cc3ff"><circle class="bub" cx="40" cy="250" r="4"/><circle class="bub" style="animation-delay:1.3s" cx="262" cy="230" r="3"/><circle class="bub" style="animation-delay:2.6s" cx="30" cy="190" r="3"/><circle class="bub" style="animation-delay:.8s" cx="272" cy="280" r="4"/></g></svg>
+<div class="cta">
+<div class="col"><button class="btn p" id="pre">Vorbestellen</button><div class="pr">1.299 €</div><p class="sm"><span class="bdg">13,3 % Rabatt</span><br>Vorbestell-Angebot · regulärer Preis <s>1.499 €</s><br>Du sparst 200 €</p></div>
+<div class="col"><a class="btn" href="#features">Features</a><span class="ar">↓</span><p class="sm">Alle Funktionen entdecken</p></div>
+</div></section>
+
+<section class="sec" id="features"><h2>Mehr als nur<br><span class="g">eine Toilette.</span></h2><p class="sm" style="font-size:18px">Komfort. Hygiene. Technologie. Alles in einem.</p><div id="fl"></div></section>
+
+<footer><b>AquaSense</b>Intelligent. Hygienisch. Zukunftsweisend.<br>Die Zukunft beginnt im Badezimmer.<p class="sm" style="margin-top:26px;font-size:12px">Hypothetisches Produkt für den Technikunterricht.</p></footer>
+<div id="ts"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const F=[
+['Selbstreinigung','Sauber. Ganz automatisch.','Die smarte Reinigungstechnologie sorgt für maximale Hygiene – vor und nach jeder Nutzung.',['UV-Licht zur Keimreduktion','Leistungsstarke Wasserstrahlen','Antibakterielle Beschichtung'],'<svg viewBox="0 0 120 90" fill="none"><path d="M10 50h100c0 24-22 36-50 36S10 74 10 50Z" stroke="#2f8fff" stroke-width="3"/><path class="gl" d="M60 30L40 62h40Z" fill="#8b6cff" opacity=".5"/><circle class="gl" cx="60" cy="28" r="6" fill="#b48cff"/><path d="M30 68q30 10 60 0" stroke="#4cc3ff" stroke-width="3"/></svg>'],
+['Beheizter Sitz','Wohlige Wärme – zu jeder Jahreszeit.','Der Sitz passt sich deiner individuellen Temperatur an und sorgt so für ein angenehmes Sitzgefühl – selbst an kalten Tagen.',['Temperatur einstellbar','Schnelle Aufheizfunktion'],'<svg viewBox="0 0 120 90" fill="none"><ellipse class="gl" cx="60" cy="62" rx="48" ry="16" stroke="#ff9f0a" stroke-width="6"/><g stroke="#ff9f0a" stroke-width="4" stroke-linecap="round"><path class="up" d="M38 50V28M32 35l6-7 6 7"/><path class="up" style="animation-delay:.5s" d="M60 48V20M54 27l6-7 6 7"/><path class="up" style="animation-delay:1s" d="M82 50V28M76 35l6-7 6 7"/></g></svg>'],
+['Ausfahrbares Bidet','Sanfte Reinigung. Natürlich frisch.','Das integrierte Bidet fährt bei Bedarf automatisch aus und sorgt mit einem sanften Wasserstrahl für besondere Reinigung.',['Druck & Temperatur regulierbar','Schonend & hygienisch'],'<svg viewBox="0 0 120 90" fill="none"><path d="M10 40h100c0 24-22 36-50 36S10 64 10 40Z" stroke="#2f8fff" stroke-width="3"/><path d="M50 70L72 44" stroke="#9db2cf" stroke-width="6" stroke-linecap="round"/><g fill="#4cc3ff"><circle class="d2" cx="72" cy="42" r="3"/><circle class="d2" style="animation-delay:.4s" cx="72" cy="42" r="3"/><circle class="d2" style="animation-delay:.8s" cx="72" cy="42" r="2.5"/></g></svg>'],
+['Selbstöffnender Deckel','Berührungslos. Komfortabel. Hygienisch.','Der Deckel öffnet sich automatisch, sobald du dich näherst – ganz ohne Berührung.',['Sensor gesteuert','Ideal für mehr Hygiene'],'<svg viewBox="0 0 120 90" fill="none"><path d="M10 48h100v12c0 14-22 24-50 24S10 74 10 60Z" stroke="#2f8fff" stroke-width="3"/><path class="lid" d="M10 48c0-14 22-20 40-20h40v20Z" stroke="#4cc3ff" stroke-width="3"/><g stroke="#4cc3ff" stroke-width="3" stroke-linecap="round"><path class="wv" d="M6 60q-6 8 0 16"/><path class="wv" style="animation-delay:.5s" d="M-2 54q-12 14 0 28"/></g></svg>'],
+['Smart-Display','Immer informiert.','Das integrierte Display zeigt dir wichtige Informationen – von Fehlermeldungen bis hin zur Wassertemperatur.',['Fehlermeldungen','Wassertemperatur','Verbindungsstatus','und vieles mehr'],'<svg viewBox="0 0 120 90"><rect x="6" y="18" width="108" height="54" rx="12" fill="#07101f" stroke="#2f8fff" stroke-width="2"/><text x="20" y="40" font-size="11" fill="#ffb340" font-family="sans-serif">⚠ Deckel offen</text><text x="20" y="62" font-size="16" font-weight="700" fill="#fff" font-family="sans-serif">37°C</text><path class="gl" d="M86 58a10 10 0 0 1 16 0M90 63a5 5 0 0 1 8 0" stroke="#4cc3ff" stroke-width="2.5" fill="none"/></svg>']
+];
+$('#fl').innerHTML=F.map(f=>`<article class="fc rv"><div class="vz">${f[4]}</div><h3>${f[0]}</h3><b>${f[1]}</b><p>${f[2]}</p><ul>${f[3].map((c,k)=>`<li style="--k:${k}">${c}</li>`).join('')}</ul></article>`).join('');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.3});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+const D=[['Produktentwicklung und Prototypen',55],['Werkzeuge und Zertifizierungen',45],['Erste Produktionscharge',60],['Werbung und Marketing',35],['Website und Vertrieb',15],['Logistik und Garantierücklagen',25],['Finanzielle Reserve',15]],C=['#2f8fff','#38c8ff','#5eead4','#8b9cff','#b48cff','#ffb36b','#7a8aa5'],Lc=2*Math.PI*64;
+let cum=0;
+$('#dn').insertAdjacentHTML('afterbegin',D.map((d,i)=>{const l=d[1]/250*Lc,s=`<circle r="64" cx="100" cy="100" fill="none" stroke="${C[i]}" stroke-width="26" stroke-dasharray="0 ${Lc}" stroke-dashoffset="${-cum}" data-l="${l-2.5}" style="transition-delay:${i*.12}s" transform="rotate(-90 100 100)"/>`;cum+=l;return s}).join(''));
+$('#rows').innerHTML=D.map((d,i)=>`<div class="row"><i style="background:${C[i]}"></i><span>${d[0]}</span>${(d[1]*1000).toLocaleString('de-DE')} €</div>`).join('')+'<div class="row t"><span>Gesamt</span>250.000 €</div>';
+const run=()=>document.querySelectorAll('#dn circle').forEach(c=>{c.style.strokeDasharray='0 '+Lc;setTimeout(()=>c.style.strokeDasharray=c.dataset.l+' '+Lc,60)});
+$('#mb').onclick=()=>{document.body.classList.toggle('open');if(document.body.classList.contains('open')&&$('#inv').classList.contains('on'))run()};
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button,.pn').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('#'+b.dataset.t).classList.add('on');if(b.dataset.t==='inv')run()});
+$('#pre').onclick=()=>{const t=$('#ts');t.textContent='Danke für dein Interesse! AquaSense ist ein hypothetisches Produkt für den Technikunterricht.';t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3600)};
+</script>
+</body>
+</html>
